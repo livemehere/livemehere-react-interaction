@@ -1,4 +1,4 @@
-import { cloneElement, ReactElement, useMemo, useRef } from "react";
+import { cloneElement, ReactElement, useEffect, useMemo, useRef } from "react";
 import { getElementFromRef } from "../../utils/component.ts";
 import { isHit, lerp } from "../../utils/calc.ts";
 import useAnimationFrame from "../../hooks/useAnimationFrame.ts";
@@ -17,11 +17,11 @@ export default function DragAble({ children, pin }: Props) {
   const pos = useRef({ x: 0, y: 0 });
   const { mouse } = useAnimation();
   const originRect = useRef<DOMRect | null>(null);
+  const scrollRef = useRef({ x: 0, y: 0 });
 
   useAnimationFrame(() => {
     const element = getElementFromRef(childrenRef);
     const rect = element.getBoundingClientRect(); // children must be rendered before this component
-
     if (mouse.isDown && isHit(mouse, element.getBoundingClientRect())) {
       pos.current.x = mouse.x - rect.width / 2 - originRect.current!.left;
       pos.current.y = mouse.y - rect.height / 2 - originRect.current!.top;
@@ -36,6 +36,30 @@ export default function DragAble({ children, pin }: Props) {
       element.style.transform = `translate(${pos.current.x}px, ${pos.current.y}px)`;
     }
   }, [pin?.density]);
+
+  useEffect(() => {
+    const scroll = () => {
+      const deltaX = scrollRef.current.x - window.scrollX;
+      const deltaY = scrollRef.current.y - window.scrollY;
+      pos.current.x += deltaX;
+      pos.current.y += deltaY;
+
+      scrollRef.current.x = window.scrollX;
+      scrollRef.current.y = window.scrollY;
+
+      originRect.current = {
+        ...originRect.current!,
+        left: originRect.current!.left + deltaX,
+        top: originRect.current!.top + deltaY,
+      };
+    };
+
+    window.addEventListener("scroll", scroll);
+
+    return () => {
+      window.removeEventListener("scroll", scroll);
+    };
+  }, []);
 
   const childrenComponent = useMemo(() => {
     return cloneElement(children as any, {
