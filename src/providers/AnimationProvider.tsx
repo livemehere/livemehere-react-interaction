@@ -22,7 +22,6 @@ export function AnimationProvider({ children }: { children: ReactNode }) {
       valueRef.current.mouse.x = e.clientX;
       valueRef.current.mouse.y = e.clientY;
     };
-    window.addEventListener("mousemove", onMouseMove);
 
     const mouseDown = () => {
       valueRef.current.mouse.isDown = true;
@@ -32,13 +31,14 @@ export function AnimationProvider({ children }: { children: ReactNode }) {
       valueRef.current.mouse.isDown = false;
     };
 
-    window.addEventListener("mousedown", mouseDown);
-    window.addEventListener("mouseup", mouseUp);
+    window.addEventListener("pointermove", onMouseMove);
+    window.addEventListener("pointerdown", mouseDown);
+    window.addEventListener("pointerup", mouseUp);
 
     return () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mousedown", mouseDown);
-      window.removeEventListener("mouseup", mouseUp);
+      window.removeEventListener("pointermove", onMouseMove);
+      window.removeEventListener("pointerdown", mouseDown);
+      window.removeEventListener("pointerup", mouseUp);
     };
   }, []);
 
