@@ -1,8 +1,18 @@
 {
-  "name": "28.three-js-again",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@livemehere/react-interaction",
+  "version": "1.0.0",
   "type": "module",
+  "repository": "https://github.com/livemehere/livemehere-react-interaction",
+  "license": "MIT",
+  "author": "livemehere",
+  "description": "react interaction",
+  "keywords": [
+    "react",
+    "interaction",
+    "animation",
+    "transition",
+    "motion"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
