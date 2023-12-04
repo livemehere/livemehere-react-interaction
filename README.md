@@ -4,8 +4,8 @@
 
 - [x] Drag and Drop
   - [x] Pin(optional)
-- [ ] rope
-- [ ] spring
-- [ ] collision
-- [ ] gravity
-
+  - [ ] Swap
+- [ ] Rope
+- [ ] Spring
+- [ ] Collision
+- [ ] Gravity
