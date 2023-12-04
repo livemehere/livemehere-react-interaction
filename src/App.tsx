@@ -12,7 +12,7 @@ function App() {
         <div>
           <button onClick={() => setSize((prev) => prev + 10)}>UP</button>
         </div>
-        <DragAble>
+        <DragAble pin={{ density: 0.2 }}>
           <Box width={size} height={size} color={"tomato"} />
         </DragAble>
         <DragAble>

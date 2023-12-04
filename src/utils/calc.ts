@@ -8,3 +8,7 @@ export function isHit(mouse: AnimationMouse, rect: DOMRect) {
     mouse.y <= rect.y + rect.height
   );
 }
+
+export function lerp(a: number, b: number, n: number) {
+  return a + (b - a) * n;
+}

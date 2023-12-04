@@ -1,15 +1,18 @@
 import { cloneElement, ReactElement, useMemo, useRef } from "react";
 import { getElementFromRef } from "../../utils/component.ts";
-import { isHit } from "../../utils/calc.ts";
+import { isHit, lerp } from "../../utils/calc.ts";
 import useAnimationFrame from "../../hooks/useAnimationFrame.ts";
 import useAnimation from "../../hooks";
 import { UtilComponentRef } from "../../types/util-comp";
 
 interface Props {
   children: ReactElement;
+  pin?: {
+    density: number; // 0~1
+  };
 }
 
-export default function DragAble({ children }: Props) {
+export default function DragAble({ children, pin }: Props) {
   const childrenRef = useRef<UtilComponentRef | HTMLElement | null>(null);
   const pos = useRef({ x: 0, y: 0 });
   const { mouse } = useAnimation();
@@ -24,7 +27,15 @@ export default function DragAble({ children }: Props) {
       pos.current.y = mouse.y - rect.height / 2 - originRect.current!.top;
       element.style.transform = `translate(${pos.current.x}px, ${pos.current.y}px)`;
     }
-  }, []);
+
+    if (!mouse.isDown && pin?.density && pos.current.x > 0.001) {
+      const targetX = 0;
+      const targetY = 0;
+      pos.current.x = lerp(pos.current.x, targetX, pin.density);
+      pos.current.y = lerp(pos.current.y, targetY, pin.density);
+      element.style.transform = `translate(${pos.current.x}px, ${pos.current.y}px)`;
+    }
+  }, [pin?.density]);
 
   const childrenComponent = useMemo(() => {
     return cloneElement(children as any, {
